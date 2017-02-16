@@ -6,7 +6,7 @@
  * Time: 19:40
  */
 
-namespace AppBundle;
+namespace ShortLinkBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 

@@ -1,0 +1,3 @@
+shortRoute:
+    path:      /short
+    defaults:  { _controller: ShortLinkBundle:Short:index }

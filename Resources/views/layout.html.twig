@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8" />
     <title>Short URL!</title>
+    <link rel="stylesheet" type="text/css" href="bundles/short_link/css/main.css">
     {% block stylesheets %}{% endblock %}
 </head>
 <body>
-<h1>TEST</h1>
+<h1>{{ url('shortRoute') }}</h1>
 {% block body %}{% endblock %}
 {#{% block javascripts %}{% endblock %}#}
 </body>

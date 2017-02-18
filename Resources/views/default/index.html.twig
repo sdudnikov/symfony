@@ -1,5 +1,21 @@
 {% extends '@short/layout.html.twig' %}
 
 {% block body %}
-    <h2>Index file</h2>
+    <div ng-controller="shortLinkController">
+        <div class="col-md-12">
+            <h2>URL Shorter </h2>
+        </div>
+        <form name="sendForm">
+            <div class="col-md-4">
+                <p><input type="text" class="form-control" ng-model="url.original" required value="" placeholder="Enter URL" /></p>
+            </div>
+            <div class="col-md-4">
+                <p><input type="text" class="form-control" ng-model="url.alias" value="" placeholder="Enter Alias URL" /></p>
+            </div>
+            <div class="col-md-4">
+                <button ng-click="generateUrl(sendForm)" class="btn btn-default">Generate</button>
+            </div>
+        </form>
+    </div>
+    <script src="app/js/controllers/shortLinkController.js"></script>
 {% endblock %}

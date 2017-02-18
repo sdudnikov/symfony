@@ -1,3 +1,17 @@
-shortRoute:
-    path:      /short
+indexRoute:
+    path:      /
     defaults:  { _controller: ShortLinkBundle:Short:index }
+
+linksRoute:
+    path:      /links
+    defaults:  { _controller: ShortLinkBundle:Short:getLinks }
+
+generateRoute:
+    path:      /generate
+    defaults:  { _controller: ShortLinkBundle:Short:generate }
+
+urlRoute:
+    path:      /{url}
+    defaults:  { _controller: ShortLinkBundle:Short:redirect }
+
+

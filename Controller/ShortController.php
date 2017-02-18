@@ -11,8 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\Request;
-
-
+use ShortLinkBundle\Entity\Url;
 
 
 class ShortController extends Controller
@@ -21,30 +20,79 @@ class ShortController extends Controller
         return $this->render('@short/default/index.html.twig');
     }
 
-    public function getLinksAction() {
+    public function getLinksAction(Request $request) {
+        $urls = array();
+        $session = $request->getSession();
+        $userId = $session->get('user_id');
+        if(!empty($userId)){
+            $repository = $this->getDoctrine()->getRepository('ShortLinkBundle:Url');
+            $urls = $repository->findByUserId($userId);
+        }
+
+        $result = array();
         $baseUrl = $this->generateUrl('indexRoute', array(), UrlGeneratorInterface::ABSOLUTE_URL);
-
-        $result = array(
-            array('origin_url' => 'https://www.yandex.ru/', 'alias_url' => $baseUrl.'ffsdfd'),
-            array('origin_url' => 'https://www.yandex.ru/', 'alias_url' => $baseUrl.'dddd')
-        );
-
+        foreach ($urls as $url){
+            $result[] = array('origin_url' => $url->getOrigin(), 'alias_url' => $baseUrl.$url->getAlias());
+        }
         return new JsonResponse($result);
     }
 
     public function generateAction(Request $request){
         $data = $request->request->all();
-        $t = 5;
 
+        $original = isset($data['original']) ? $data['original'] : null;
+        $alias =  isset($data['alias']) ? $data['alias'] : null;
+
+        if(isset($original)){
+            if($this->isValidUrl($original)){
+                if(isset($alias)){
+                    $repository = $this->getDoctrine()->getRepository('ShortLinkBundle:Url');
+                    $url = $repository->findOneByAlias($alias);
+                    if($url != null){
+                        return new JsonResponse(array('status' => 'error', 'msg' => "Alias URL already exist"));
+                    }
+                }
+
+                $session = $request->getSession();
+                $userId = $session->get('user_id');
+                if(empty($userId)){
+                    $userId = uniqid();
+                    $session->set('user_id', $userId);
+                }
+
+                $alias = !isset($alias) ? $this->generateShortUrl() : $alias;
+
+                $newUrl = new Url();
+                $newUrl->setAlias($alias);
+                $newUrl->setOrigin($original);
+                $newUrl->setUserId($userId);
+
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($newUrl);
+                $em->flush();
+
+                return new JsonResponse(array('status' => 'success', 'msg' => "Url was generated"));
+            }
+            return new JsonResponse(array('status' => 'error', 'msg' => "Invalid URL"));
+        }
+        return new JsonResponse(array('status' => 'error', 'msg' => "Field URL must have value!"));
     }
 
     public function redirectAction($url) {
-        if($url == "test"){
-            return $this->redirect('https://www.yandex.ru/');
+        $repository = $this->getDoctrine()->getRepository('ShortLinkBundle:Url');
+        $url = $repository->findOneByAlias($url);
+
+        if($url != null){
+            return $this->redirect($url->getOrigin());
         }
         return $this->render('@short/default/error.html.twig');
     }
 
+    private function isValidUrl($url){
+        return true;
+    }
 
-
+    private function generateShortUrl(){
+        return substr(md5(uniqid()), 0, 8);
+    }
 }

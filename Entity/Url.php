@@ -24,7 +24,7 @@ class Url
     /**
      * @var string
      *
-     * @ORM\Column(name="origin", type="string", length=512)
+     * @ORM\Column(name="origin", type="string", length=255)
      */
     private $origin;
 
@@ -38,9 +38,16 @@ class Url
     /**
      * @var string
      *
-     * @ORM\Column(name="user_id", type="string", length=255)
+     * @ORM\Column(name="user_id", type="string", length=50)
      */
     private $userId;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="click_amount", type="integer")
+     */
+    private $clickAmount;
 
 
     /**
@@ -120,5 +127,28 @@ class Url
     public function getUserId()
     {
         return $this->userId;
+    }
+
+    /**
+     * Set clickAmount
+     *
+     * @param integer $clickAmount
+     * @return Url
+     */
+    public function setClickAmount($clickAmount)
+    {
+        $this->clickAmount = $clickAmount;
+
+        return $this;
+    }
+
+    /**
+     * Get clickAmount
+     *
+     * @return integer 
+     */
+    public function getClickAmount()
+    {
+        return $this->clickAmount;
     }
 }

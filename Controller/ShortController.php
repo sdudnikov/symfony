@@ -32,7 +32,9 @@ class ShortController extends Controller
         $result = array();
         $baseUrl = $this->generateUrl('indexRoute', array(), UrlGeneratorInterface::ABSOLUTE_URL);
         foreach ($urls as $index => $url){
-            $result[] = array('origin_url' => $url->getOrigin(), 'alias_url' => $baseUrl.$url->getAlias());
+            $result[] = array('origin_url' => $url->getOrigin(),
+                'alias_url' => $baseUrl.$url->getAlias(),
+                'amount_click' => $url->getClickAmount());
         }
         return new JsonResponse($result);
     }
@@ -66,6 +68,7 @@ class ShortController extends Controller
                 $newUrl->setAlias($alias);
                 $newUrl->setOrigin($original);
                 $newUrl->setUserId($userId);
+                $newUrl->setClickAmount(0);
 
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($newUrl);
@@ -83,6 +86,11 @@ class ShortController extends Controller
         $url = $repository->findOneByAlias($url);
 
         if($url != null){
+            $url->setClickAmount($url->getClickAmount() + 1);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($url);
+            $em->flush();
+
             return $this->redirect($url->getOrigin());
         }
         return $this->render('@short/default/error.html.twig');

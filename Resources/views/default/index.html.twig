@@ -41,6 +41,7 @@
                     <th>#</th>
                     <th>Original URL</th>
                     <th>Short URL</th>
+                    <th>Count Click</th>
                     <th>Copy</th>
                 </tr>
                 </thead>
@@ -49,6 +50,7 @@
                     <th scope="row">{[{ $index }]}</th>
                     <td><a href="{[{ url.origin_url }]}">{[{ url.origin_url }]}</a></td>
                     <td><a href="{[{ url.alias_url }]}">{[{ url.alias_url }]}</a></td>
+                    <td>{[{ url.amount_click }]}</td>
                     <td><button type="button"  ng-click="copy(url)" class="btn btn-default btn-sm">Copy</button></td>
                 </tr>
                 </tbody>

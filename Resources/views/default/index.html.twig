@@ -1,10 +1,26 @@
 {% extends '@short/layout.html.twig' %}
 
 {% block body %}
+
     <div ng-controller="shortLinkController">
         <div class="col-md-12">
-            <h2>URL Shorter </h2>
+            <h2>Generate URL Shorter </h2>
         </div>
+
+        <div id="modal" class="modal">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button"  ng-click="hideModal()" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title">Notification</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>{[{ modalMsg }]}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <form name="sendForm">
             <div class="col-md-4">
                 <p><input type="text" class="form-control" ng-model="url.original" required value="" placeholder="Enter URL" /></p>
@@ -16,6 +32,28 @@
                 <button ng-click="generateUrl(sendForm)" class="btn btn-default">Generate</button>
             </div>
         </form>
+
+        <div id="grid" class="col-md-12 hide">
+            <h2>Shorter URLS</h2>
+            <table class="table">
+                <thead class="thead-inverse">
+                <tr>
+                    <th>#</th>
+                    <th>Original URL</th>
+                    <th>Short URL</th>
+                    <th>Copy</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="url in listOfUrl">
+                    <th scope="row">{[{ $index }]}</th>
+                    <td><a href="{[{ url.origin_url }]}">{[{ url.origin_url }]}</a></td>
+                    <td><a href="{[{ url.alias_url }]}">{[{ url.alias_url }]}</a></td>
+                    <td><button type="button"  ng-click="copy(url)" class="btn btn-default btn-sm">Copy</button></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
     <script src="app/js/controllers/shortLinkController.js"></script>
 {% endblock %}

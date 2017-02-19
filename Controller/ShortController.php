@@ -31,7 +31,7 @@ class ShortController extends Controller
 
         $result = array();
         $baseUrl = $this->generateUrl('indexRoute', array(), UrlGeneratorInterface::ABSOLUTE_URL);
-        foreach ($urls as $url){
+        foreach ($urls as $index => $url){
             $result[] = array('origin_url' => $url->getOrigin(), 'alias_url' => $baseUrl.$url->getAlias());
         }
         return new JsonResponse($result);
@@ -49,7 +49,7 @@ class ShortController extends Controller
                     $repository = $this->getDoctrine()->getRepository('ShortLinkBundle:Url');
                     $url = $repository->findOneByAlias($alias);
                     if($url != null){
-                        return new JsonResponse(array('status' => 'error', 'msg' => "Alias URL already exist"));
+                        return new JsonResponse(array('status' => 'error', 'msg' => "The alias '{$alias}' already exist"));
                     }
                 }
 

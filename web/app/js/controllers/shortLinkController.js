@@ -36,7 +36,8 @@ myApp.controller('shortLinkController', function($scope, $http, $httpParamSerial
                     $scope.modalMsg = response.data.msg;
                     if(response.data.status == 'success'){
                         $scope.listOfUrl.push({origin_url: $scope.url.original,
-                            alias_url: window.location.origin + '/' + $scope.url.alias});
+                            alias_url: window.location.origin + '/' + $scope.url.alias,
+                            amount_click: 0});
                     }
                     modal.css('display', 'block');
                 },

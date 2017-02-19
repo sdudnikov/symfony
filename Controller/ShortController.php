@@ -89,7 +89,21 @@ class ShortController extends Controller
     }
 
     private function isValidUrl($url){
-        return true;
+        $valid = false;
+        if( $curl = curl_init() ) {
+            curl_setopt($curl, CURLOPT_URL, $url);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+            $result = curl_exec($curl);
+            if($result != false){
+                $info = curl_getinfo($curl);
+                if($info['http_code'] >= 200 && $info['http_code'] < 400){
+                    $valid = true;
+                }
+            }
+            curl_close($curl);
+        }
+        return $valid;
     }
 
     private function generateShortUrl(){

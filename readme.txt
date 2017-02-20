@@ -1,21 +1,24 @@
 
-для запуска проекта необходимо содержимое папки "web" скопировать в папку 'web' symfony
-далее в файл config.yml добавить следующие настройки:
+To properly run Bundle you have to do following things:
 
-session:
-    cookie_lifetime: 999999
+1. copy content of folder 'web' from bundle into folder "web" symfony
 
-twig:
-    paths:
-      '%kernel.root_dir%/../src/ShortLinkBundle/Resources/views': short
+2. add to file 'config.yml' following parameters:
+
+    session:
+        cookie_lifetime: 999999
+
+    twig:
+        paths:
+          '%kernel.root_dir%/../src/ShortLinkBundle/Resources/views': short
+
+3. add to file 'routing.yml' following parameters:
+
+    short:
+        resource: "@ShortLinkBundle/Resources/config/routing.yml"
 
 
-и в файл routing.yml добавить:
 
-short:
-    resource: "@ShortLinkBundle/Resources/config/routing.yml"
+4. for creating table in db execute this command:
 
-
-для того чтобы создать таблицу в бд  используйте эту команду:
-
-php bin/console doctrine:schema:update --force
+    php bin/console doctrine:schema:update --force

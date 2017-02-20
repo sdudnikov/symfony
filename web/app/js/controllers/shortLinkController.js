@@ -9,19 +9,7 @@ myApp.controller('shortLinkController', function($scope, $http, $httpParamSerial
     $scope.listOfUrl = {};
     $scope.modalMsg = "";
 
-    $http.get('/links').then(
-        function success(response) {
-            $scope.listOfUrl = response.data;
-            var grid = angular.element(document.querySelector('#grid'));
-            grid.removeClass('hide');
-        },
-        function error(response) {
-            var modal = angular.element(document.querySelector('#modal'));
-            $scope.modalMsg = "Unexpected error! Can not load urls!";
-            modal.css('display', 'block');
-        }
-    );
-
+    updateGrid($scope);
 
     $scope.generateUrl = function(sendForm){
         if(sendForm.$valid){
@@ -35,9 +23,7 @@ myApp.controller('shortLinkController', function($scope, $http, $httpParamSerial
                 function success(response) {
                     $scope.modalMsg = response.data.msg;
                     if(response.data.status == 'success'){
-                        $scope.listOfUrl.push({origin_url: $scope.url.original,
-                            alias_url: window.location.origin + '/' + $scope.url.alias,
-                            amount_click: 0});
+                        updateGrid($scope);
                     }
                     modal.css('display', 'block');
                 },
@@ -65,6 +51,21 @@ myApp.controller('shortLinkController', function($scope, $http, $httpParamSerial
         textArea.select();
         document.execCommand('copy');
         document.body.removeChild(textArea);
+    }
+
+    function updateGrid(scope) {
+        $http.get('/links').then(
+            function success(response) {
+                scope.listOfUrl = response.data;
+                var grid = angular.element(document.querySelector('#grid'));
+                grid.removeClass('hide');
+            },
+            function error(response) {
+                var modal = angular.element(document.querySelector('#modal'));
+                scope.modalMsg = "Unexpected error! Can not load urls!";
+                modal.css('display', 'block');
+            }
+        );
     }
 
 });
